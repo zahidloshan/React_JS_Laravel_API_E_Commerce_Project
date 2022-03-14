@@ -1,28 +1,27 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import { BrowserRouter as Router, Routes, Route ,Switch } from "react-router-dom";
 
 import MainLayout from "./layouts/admin/MainLayout";
+import Home from "./layouts/frontend/Home";
 
 
 function App() {
   return (
     <div className="App">
 
-<BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout/>}>
-          
-        
-          
-        </Route>
-      </Routes>
-    </BrowserRouter>
+               <Router>
+
+                 <Switch>
 
 
+                   <Route exact path="/" component={Home}/>         
+                   <Route path="/admin" name='Admin' render={(props) => <MainLayout {...props}/> }/>
 
-    
-     
-     
+                 </Switch>
+
+               </Router>
+
     </div>
   );
 }
