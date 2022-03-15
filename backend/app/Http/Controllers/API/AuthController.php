@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -54,4 +54,56 @@ class AuthController extends Controller
                  ]);
             }
     }
+    
+    public function login (Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|max: 191', 
+            'password' => 'required|min: 8',
+        
+        ]);
+
+        if($validator->fails())
+
+        {
+
+            return response()->json([
+            
+            'validation_errors'=>$validator->messages(),
+            
+            ]);
+
+        }
+
+        else{
+            $user = User::where('email', $request->email)->first();
+
+            if ( ($user->password != $request->password) || ($user->email != $request->email))
+            {
+                return response()->json ([
+            
+                    'status'=>401,
+                    'message'=> 'Invalid Login',
+            
+                ]);
+            }
+
+            else{
+                    $token = $user->createToken ($user->email.'_Token')->plainTextToken;
+
+                        return response()->json ([
+                        
+                        'status'=>200,
+                        'username'=>$user->name,
+                        'token'=>$token,
+                        'message'=> 'Login in Sucessfully'
+                    
+                        ]);
+                    }
+            }
+
+        }
 }
+
+
