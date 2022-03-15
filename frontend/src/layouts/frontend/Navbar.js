@@ -2,6 +2,31 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Navbar() {
+
+    var AuthButtons ='';
+    if(!localStorage.getItem('auth_token'))
+    {
+        AuthButtons =(
+            <ul className='navbar-nav'>
+
+                <li className="nav-item">
+                <Link className="nav-link" to="/registration">Registration</Link>
+                </li>
+                <li className="nav-item">
+                <Link className="nav-link" to="/login">Login</Link>
+                </li>
+
+            </ul>
+        );
+  
+    }
+    else{
+        AuthButtons =(
+            <li className="nav-item">
+            <button type="button" className="nav-link btn btn-danger btn-sm text-white" >Logout!</button>
+            </li>
+        );
+    }
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow stick-top">
         <div className="container">
@@ -15,16 +40,10 @@ function Navbar() {
                 <Link className="nav-link active" aria-current="page" to="#">Home</Link>
                 </li>
                 <li className="nav-item">
-                <Link className="nav-link" to="/login">Login</Link>
-                </li>
-                <li className="nav-item">
-                <Link className="nav-link" to="/registration">Registration</Link>
-                </li>
-                <li className="nav-item">
                 <Link className="nav-link" to="/collection">Collection</Link>
                 </li>
                 
-                
+                {AuthButtons}
             </ul>
            
             </div>
