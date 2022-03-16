@@ -1,7 +1,34 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import swal from 'sweetalert';
+import { useHistory } from 'react-router-dom';
 
 function Navbar() {
+
+
+    const history= useHistory();
+    const handelLogout=(e)=>
+    {
+        e.preventDefault();
+        const data ={
+            message : '',
+            
+        }
+        axios.get('/sanctum/csrf-cookie').then(response => {
+            axios.post(`/api/logout`,data).then(res =>{
+                if(res.data.status === 200)
+                {
+                    
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('auth_name');
+                    swal("Logout",res.data.message,"success");
+
+                    history.push('/');
+                }
+            });
+        });         
+    }
 
     var AuthButtons ='';
     if(!localStorage.getItem('auth_token'))
@@ -23,7 +50,7 @@ function Navbar() {
     else{
         AuthButtons =(
             <li className="nav-item">
-            <button type="button" className="nav-link btn btn-danger btn-sm text-white" >Logout!</button>
+            <button type="button" onClick={handelLogout} className="nav-link btn btn-danger btn-sm text-white" >Logout!</button>
             </li>
         );
     }
