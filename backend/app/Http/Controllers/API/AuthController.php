@@ -96,6 +96,7 @@ class AuthController extends Controller
                         
                         'status'=>200,
                         'username'=>$user->name,
+                        'usertype'=>$user->role_as,
                         'token'=>$token,
                         'message'=> 'Login in Sucessfully'
                     

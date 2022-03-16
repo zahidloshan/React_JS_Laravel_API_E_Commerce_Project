@@ -15,8 +15,8 @@ function Navbar() {
             message : '',
             
         }
-        axios.get('/sanctum/csrf-cookie').then(response => {
-            axios.post(`/api/logout`,data).then(res =>{
+       
+            axios.post(`/api/logout`).then(res =>{
                 if(res.data.status === 200)
                 {
                     
@@ -27,7 +27,7 @@ function Navbar() {
                     history.push('/');
                 }
             });
-        });         
+             
     }
 
     var AuthButtons ='';
