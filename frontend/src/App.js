@@ -8,6 +8,8 @@ import Login from "./Components/frontend/auth/Login";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import AdminPrivateRoute from "./routes/AdminPrivateRoute";
+import Page403 from "./Components/errors/Page403";
+import Page404 from "./Components/errors/Page404";
 
 axios.defaults.baseURL="http://localhost:8000/";
 axios.defaults.headers.post['Content-Type']='application/json';
@@ -33,7 +35,9 @@ function App() {
                  <Switch>
 
 
-                   <Route exact path="/" component={Home}/>    
+                   <Route exact path="/" component={Home}/>   
+                   <Route path="/403" component={Page403}/>
+                   <Route path="/404" component={Page404}/>
                    <Route path="/login">
                      {localStorage.getItem('auth_token') ? <Redirect to='/'/> : <Login/> }
                    </Route>

@@ -20,8 +20,12 @@ const Sidebar = () =>{
                                 Profile
                                 
                             </Link>
-                            
 
+                            <Link className="nav-link" to="/admin/category">
+                                <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
+                                Catetgory
+                                
+                            </Link>
                             
                             <div className="sb-sidenav-menu-heading">Interface</div>
                             <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">

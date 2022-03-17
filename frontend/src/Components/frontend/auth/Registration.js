@@ -39,10 +39,11 @@ function Registration() {
 
                 localStorage.setItem('auth_token',res.data.token);
                 localStorage.setItem('auth_name',res.data.username);
+                localStorage.setItem('reg_token',res.data.reg);
 
                 swal("Success",res.data.message,"success");
 
-                history.push('/');
+                history.push('/login');
 
             }
             else{

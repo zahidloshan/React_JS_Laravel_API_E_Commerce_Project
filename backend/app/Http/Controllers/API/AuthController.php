@@ -50,6 +50,7 @@ class AuthController extends Controller
                   'status'=>200,
                   'username'=>$user->name,
                   'token'=>$token,
+                  'reg'=>'RegistrationChecker',
                   'message'=> 'Registation Sucessfully'
             
                  ]);
@@ -93,12 +94,13 @@ class AuthController extends Controller
             else{
                 if($user->role_as == 1) // 1= Admin
                 {
+                    $role='admin';
                     $token = $user->createToken ($user->email.'_AdminToken',['server:admin'])->plainTextToken;
     
                 }
                 else{
-    
-                    $token = $user->createToken ($user->email.'_Token',[''])->plainTextToken;
+                    $role='';
+                    $token = $user->createToken ($user->email.'_userToken',[""])->plainTextToken;
     
                 }
                   
@@ -108,7 +110,8 @@ class AuthController extends Controller
                         'status'=>200,
                         'username'=>$user->name,
                         'token'=>$token,
-                        'message'=> 'Login in Sucessfully'
+                        'message'=> 'Login in Sucessfully',
+                        'role'=>$role,
                     
                         ]);
                     }

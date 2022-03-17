@@ -13,8 +13,8 @@ function AdminPrivateRoute({...rest}) {
     const [loading, setLoading]= useState(true);
     
     useEffect(() => {
-        axios.get(`/api/checkingAuthenticated`).then(res => {
-            if(res.status === 200)
+        axios.get(`/api/checkingAuthenticated`).then(res=> {
+                if(res.status === 200)
                 {
                     setAuthenticated(true);
                 }
@@ -38,8 +38,56 @@ function AdminPrivateRoute({...rest}) {
             
             return Promise.reject(err);
             }
+
+            if(err.response.status === 403) // Access Denied ===
+        
+            {
+            
+                swal("Forbedden", err.response.data.message, "warning"); 
+                history.push('/403');
+            
+            }
+            
+            else if(err.response.status === 404) //Page Not Found
+            
+            {
+            
+                swal("404 Error","Url/Page Not Found","warning"); 
+                history.push('/404');
+            
+            }
         
        });
+
+       
+
+     {/*axios.interceptors.response.use(function (response) {
+
+        return response;
+        
+        }, function (error) {
+        
+        if(error.response.status === 403) // Access Denied ===
+        
+        {
+        
+            swal("Forbedden", error.response.data.message, "warning"); 
+            history.push('/Page403');
+        
+        }
+        
+        else if(error.response.status === 404) //Page Not Found
+        
+        {
+        
+            swal("404 Error","Url/Page Not Found","warning"); 
+            history.push('/Page404');
+        
+        }
+        
+        return Promise.reject(error);
+    }
+);*/}
 
       if(loading)
       {

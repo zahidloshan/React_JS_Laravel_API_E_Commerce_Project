@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CategoryController;
 
 
 /*
@@ -24,7 +25,12 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function () {
     Route::get('/checkingAuthenticated', function () { 
         return response()->json(['message' => 'You are in', 'status'=>200], 200); 
     });
+    //Create Category 
+    Route::post('add_category',[CategoryController::class,'add_category']);
+    //Route::post('logout', [AuthController::class, 'logout']);
+});
 
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
