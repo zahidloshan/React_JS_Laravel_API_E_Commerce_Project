@@ -1,0 +1,75 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+
+function ViewCategory() {
+     const [loading, setLoading] = useState(true);
+     const [categorylist, setCategoryList] = useState({});
+     useEffect(() => {
+          axios.get(`/api/view_category`).then((res) => {
+               console.log(res.data.category);
+               if (res.status === 200) {
+                    setCategoryList(res.data.category);
+               }
+               setLoading(false);
+          });
+     }, []);
+     var viewCategory_Table_Data = "";
+     if (loading) {
+          return <h1>Loading Category.......</h1>;
+     } else {
+          viewCategory_Table_Data = categorylist.map((item) => {
+               return (
+                    <tr key={item.id}>
+                         <td>{item.id}</td>
+                         <td>{item.name}</td>
+                         <td>{item.slug}</td>
+                         <td>{item.status}</td>
+                         <td>{item.id}</td>
+                         <td>
+                              <Link>Edit</Link>
+                         </td>
+                         <td>
+                              <button>Delete</button>
+                         </td>
+                    </tr>
+               );
+          });
+     }
+     return (
+          <div className="container px-4">
+               <div className="card mt-4">
+                    <div className="card-header">
+                         <h1>
+                              Catergory List
+                              <Link className="btn btn-primary btn-sm float-end" to="/admin/category">
+                                   Add Catergory
+                              </Link>
+                         </h1>
+                    </div>
+                    <div className="card-body">
+                         <table table className="table table-bordered table-striped">
+                              <thead>
+                                   <tr>
+                                        <th>ID</th>
+
+                                        <th>Name</th>
+
+                                        <th>Slug</th>
+
+                                        <th>Status</th>
+
+                                        <th>Edit</th>
+
+                                        <th>Delete</th>
+                                   </tr>
+                              </thead>
+                              <tbody>{viewCategory_Table_Data}</tbody>
+                         </table>
+                    </div>
+               </div>
+          </div>
+     );
+}
+
+export default ViewCategory;

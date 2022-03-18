@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function () {
     });
     //Create Category 
     Route::post('add_category',[CategoryController::class,'add_category']);
+    Route::get('view_category',[CategoryController::class,'view_category']);
     //Route::post('logout', [AuthController::class, 'logout']);
 });
 
