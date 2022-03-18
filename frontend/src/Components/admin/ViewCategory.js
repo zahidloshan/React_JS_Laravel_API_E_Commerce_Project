@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import swal from "sweetalert";
 
 function ViewCategory() {
      const [loading, setLoading] = useState(true);
@@ -14,6 +15,22 @@ function ViewCategory() {
                setLoading(false);
           });
      }, []);
+
+     const deleteCategory = (e, id) => {
+          e.preventDefault();
+          const thisClicked = e.currentTarget;
+          thisClicked.innerText = "Deleting";
+          axios.delete(`/api/delete_category/${id}`).then((res) => {
+               if (res.data.status === 200) {
+                    swal("Success", res.data.message, "success");
+                    thisClicked.closest("tr").remove(); //delete from table using JS
+               } else if (res.data.status === 404) {
+                    swal("Success", res.data.message, "success");
+                    thisClicked.innerText = "Delete";
+               }
+          });
+     };
+
      var viewCategory_Table_Data = "";
      if (loading) {
           return <h1>Loading Category.......</h1>;
@@ -32,7 +49,7 @@ function ViewCategory() {
                               </Link>
                          </td>
                          <td>
-                              <button type="button" className="btn btn-danger btn-sm">
+                              <button type="button" onClick={(e) => deleteCategory(e, item.id)} className="btn btn-danger btn-sm">
                                    Delete
                               </button>
                          </td>

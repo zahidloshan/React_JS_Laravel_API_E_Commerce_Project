@@ -30,6 +30,7 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function () {
     Route::get('view_category',[CategoryController::class,'view_category']);
     Route::get('edit_category/{id}',[CategoryController::class,'edit_category']);
     Route::put('update_category/{id}',[CategoryController::class,'update_category']);
+    Route::delete('delete_category/{id}',[CategoryController::class,'delete_category']);
     //Route::post('logout', [AuthController::class, 'logout']);
 });
 

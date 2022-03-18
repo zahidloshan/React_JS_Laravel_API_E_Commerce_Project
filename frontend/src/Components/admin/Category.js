@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import axios from "axios";
 import swal from "sweetalert";
+import { Link } from "react-router-dom";
 
 function Category() {
      const [categoryInput, setCategory] = useState({
@@ -68,8 +69,16 @@ function Category() {
      }
      return (
           <div className="container py-10">
-               <h2 className="mt-4">Add Category</h2>
-
+               <div className="card mt-4">
+                    <div className="card-header">
+                         <h2 className="mt-4">
+                              <Link className="btn btn-primary btn-sm float-end" to="/admin/view_category">
+                                   View Catergory
+                              </Link>
+                              Add Category
+                         </h2>
+                    </div>
+               </div>
                {/*
                 display_errors.map((item)=>{
                     return (<p>{item}</p>)

@@ -9,6 +9,24 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+    public function delete_category(Request $request , $id)
+    {
+        $category =Category::find($id);
+        if($category)
+        {
+            $category->delete();
+            return response()->json([
+                'status'=> 200,
+                'message'=>'Category Delete Successfully',
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=> 404,
+                'message'=>'Id Not found for delete',
+            ]);
+        }
+    }
     public function update_category(Request $request , $id)
     {
         
