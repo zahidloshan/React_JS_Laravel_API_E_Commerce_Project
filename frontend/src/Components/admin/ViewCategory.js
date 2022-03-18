@@ -25,12 +25,16 @@ function ViewCategory() {
                          <td>{item.name}</td>
                          <td>{item.slug}</td>
                          <td>{item.status}</td>
-                         <td>{item.id}</td>
+
                          <td>
-                              <Link>Edit</Link>
+                              <Link to={`edit_category/${item.id}`} className="btn btn-success btn-sm">
+                                   Edit
+                              </Link>
                          </td>
                          <td>
-                              <button>Delete</button>
+                              <button type="button" className="btn btn-danger btn-sm">
+                                   Delete
+                              </button>
                          </td>
                     </tr>
                );

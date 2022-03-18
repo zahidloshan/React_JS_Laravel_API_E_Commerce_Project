@@ -51,12 +51,7 @@ const Sidebar = () => {
                                    <i className="fas fa-angle-down"></i>
                               </div>
                          </Link>
-                         <div
-                              className="collapse"
-                              id="collapseLayouts"
-                              aria-labelledby="headingOne"
-                              data-bs-parent="#sidenavAccordion"
-                         >
+                         <div className="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                               <nav className="sb-sidenav-menu-nested nav">
                                    <Link className="nav-link" to="/about">
                                         Static Navigation
@@ -82,12 +77,7 @@ const Sidebar = () => {
                                    <i className="fas fa-angle-down"></i>
                               </div>
                          </Link>
-                         <div
-                              className="collapse"
-                              id="collapsePages"
-                              aria-labelledby="headingTwo"
-                              data-bs-parent="#sidenavAccordion"
-                         >
+                         <div className="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                               <nav className="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                    <Link
                                         className="nav-link collapsed"
