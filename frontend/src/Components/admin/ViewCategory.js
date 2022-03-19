@@ -33,7 +33,17 @@ function ViewCategory() {
 
      var viewCategory_Table_Data = "";
      if (loading) {
-          return <h1>Loading Category.......</h1>;
+          return (
+               <div className="container py-10">
+                    <div className="row justify-content-center">
+                         <div className="col-md-6">
+                              <div class="spinner-grow text-success" role="status">
+                                   <span class="sr-only"></span>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          );
      } else {
           viewCategory_Table_Data = categorylist.map((item) => {
                return (
