@@ -12,12 +12,12 @@ function EditProduct(props) {
      const [loading, setLoading] = useState(true);
      const [errorslist, setError] = useState([]);
      const [image, setImage] = useState([]);
+     const [allcheckInput, setCheckBox] = useState([]);
      const [productInput, setProduct] = useState({
-          categoryid: "",
+          category_id: "",
           slug: "",
           name: "",
           description: "",
-          status: "",
 
           metatitle: "",
           metakeywords: "",
@@ -27,8 +27,6 @@ function EditProduct(props) {
           original_price: "",
           qty: "",
           brand: "",
-          featured: "",
-          popular: "",
      });
 
      useEffect(() => {
@@ -42,6 +40,7 @@ function EditProduct(props) {
           axios.get(`/api/edit_product/${product_id}`).then((res) => {
                if (res.data.status === 200) {
                     setProduct(res.data.product);
+                    setCheckBox(res.data.product);
                } else {
                     swal("Data not Found by this id", res.data.message, "warning");
                     history.push("/admin/view_product");
@@ -57,6 +56,10 @@ function EditProduct(props) {
           e.persist();
           setProduct({ ...productInput, [e.target.name]: e.target.value });
      };
+     const handleCheckBox = (e) => {
+          e.persist();
+          setCheckBox({ ...allcheckInput, [e.target.name]: e.target.checked });
+     };
 
      const updateSubmit = (e) => {
           e.preventDefault();
@@ -65,7 +68,7 @@ function EditProduct(props) {
 
           formData.append("image", image.image);
 
-          formData.append("categoryid", productInput.categoryid);
+          formData.append("category_id", productInput.category_id);
           formData.append("metatitle", productInput.metatitle);
           formData.append("metakeywords", productInput.metakeywords);
           formData.append("metadescription", productInput.metadescription);
@@ -78,32 +81,14 @@ function EditProduct(props) {
           formData.append("brand", productInput.brand);
           formData.append("description", productInput.description);
 
-          formData.append("featured", productInput.featured);
-          formData.append("popular", productInput.popular);
-          formData.append("status", productInput.status);
+          formData.append("featured", allcheckInput.featured ? "1" : "0");
+          formData.append("popular", allcheckInput.popular ? "1" : "0");
+          formData.append("status", allcheckInput.status ? "1" : "0");
 
           axios.post(`/api/update_product/${product_id}`, formData).then((res) => {
                if (res.data.status === 200) {
                     swal("Success", res.data.message, "success");
                     setError([]);
-                    setProduct({
-                         categoryid: "",
-                         slug: "",
-                         name: "",
-                         description: "",
-                         status: "",
-
-                         metatitle: "",
-                         metakeywords: "",
-                         metadescription: "",
-
-                         selling_price: "",
-                         original_price: "",
-                         qty: "",
-                         brand: "",
-                         featured: "",
-                         popular: "",
-                    });
                } else if (res.data.status === 422) {
                     swal("Product not added", "Fileds are required", "error");
                     setError(res.data.errors);
@@ -178,9 +163,9 @@ function EditProduct(props) {
                                    <div className="form-group mb-3">
                                         <label>Select Category</label>
                                         <select
-                                             name="categoryid"
+                                             name="category_id"
                                              onChange={handleInput}
-                                             value={productInput.categoryid}
+                                             value={productInput.category_id}
                                              class="form-control"
                                         >
                                              <option>Select Category</option>
@@ -192,17 +177,18 @@ function EditProduct(props) {
                                                   );
                                              })}
                                         </select>
-                                        <small className="text-danger">{errorslist.categoryid}</small>
+                                        <small className="text-danger">{errorslist.category_id}</small>
                                    </div>
                               </div>
                               <div className="form-group mb-3">
-                                   <label>Slug</label>
+                                   <label>Company Name</label>
                                    <input type="" value={productInput.slug} onChange={handleInput} name="slug" className="form-control" />
                                    <small className="text-danger">{errorslist.slug}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Name</label>
                                    <input type="" name="name" value={productInput.name} onChange={handleInput} className="form-control" />
+                                   <small className="text-danger">{errorslist.name}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Description</label>
@@ -231,6 +217,7 @@ function EditProduct(props) {
                                         onChange={handleInput}
                                         className="form-control"
                                    />
+                                   <small className="text-danger">{errorslist.metatitle}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Meta Keywords</label>
@@ -241,6 +228,7 @@ function EditProduct(props) {
                                         onChange={handleInput}
                                         className="form-control"
                                    />
+                                   <small className="text-danger">{errorslist.metakeywords}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Meta Description</label>
@@ -251,6 +239,7 @@ function EditProduct(props) {
                                         onChange={handleInput}
                                         className="form-control"
                                    />
+                                   <small className="text-danger">{errorslist.metadescription}</small>
                               </div>
                          </div>
 
@@ -265,6 +254,7 @@ function EditProduct(props) {
                                              onChange={handleInput}
                                              className="form-control"
                                         />
+                                        <small className="text-danger">{errorslist.selling_price}</small>
                                    </div>
 
                                    <div className="col-md-4 form-group mb-3">
@@ -277,6 +267,7 @@ function EditProduct(props) {
                                              onChange={handleInput}
                                              className="form-control"
                                         />
+                                        <small className="text-danger">{errorslist.original_price}</small>
                                    </div>
 
                                    <div className="col-md-4 form-group mb-3">
@@ -288,6 +279,7 @@ function EditProduct(props) {
                                              onChange={handleInput}
                                              className="form-control"
                                         />
+                                        <small className="text-danger">{errorslist.qty}</small>
                                    </div>
 
                                    <div className="col-md-4 form-group mb-3">
@@ -300,6 +292,7 @@ function EditProduct(props) {
                                              onChange={handleInput}
                                              className="form-control"
                                         />
+                                        <small className="text-danger">{errorslist.brand}</small>
                                    </div>
 
                                    <div className="col-md-8 form-group mb-3">
@@ -311,6 +304,7 @@ function EditProduct(props) {
                                              width="40px"
                                              alt={productInput.image}
                                         ></img>
+                                        <small className="text-danger">{errorslist.image}</small>
                                    </div>
                                    <div className="col-md-4 form-group mb-3">
                                         <label>Featured (checked=shown)</label>
@@ -318,8 +312,8 @@ function EditProduct(props) {
                                         <input
                                              type="checkbox"
                                              name="featured"
-                                             onChange={handleInput}
-                                             value={productInput.featured}
+                                             onChange={handleCheckBox}
+                                             defaultChecked={allcheckInput.featured === 1 ? true : false}
                                              className="w-50 h-50"
                                         />
                                    </div>
@@ -330,8 +324,8 @@ function EditProduct(props) {
                                         <input
                                              type="checkbox"
                                              name="popular"
-                                             onChange={handleInput}
-                                             value={productInput.popular}
+                                             onChange={handleCheckBox}
+                                             defaultChecked={allcheckInput.popular === 1 ? true : false}
                                              className="w-50 h-50"
                                         />
                                    </div>
@@ -342,8 +336,8 @@ function EditProduct(props) {
                                         <input
                                              type="checkbox"
                                              name="status"
-                                             onChange={handleInput}
-                                             value={productInput.status}
+                                             onChange={handleCheckBox}
+                                             defaultChecked={allcheckInput.status === 1 ? true : false}
                                              className="w-50 h-50"
                                         />
                                    </div>

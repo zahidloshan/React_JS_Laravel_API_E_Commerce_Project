@@ -176,7 +176,7 @@ function AddProduct() {
                                    </div>
                               </div>
                               <div className="form-group mb-3">
-                                   <label>Slug</label>
+                                   <label>Company Name</label>
                                    <input type="" name="slug" onChange={handleInput} value={productInput.slug} className="form-control" />
                                    <small className="text-danger">{errorslist.slug}</small>
                               </div>

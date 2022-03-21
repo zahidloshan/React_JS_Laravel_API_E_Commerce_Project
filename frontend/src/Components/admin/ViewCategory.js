@@ -86,7 +86,7 @@ function ViewCategory() {
 
                                         <th>Name</th>
 
-                                        <th>Slug</th>
+                                        <th>Company Name</th>
 
                                         <th>Status</th>
 

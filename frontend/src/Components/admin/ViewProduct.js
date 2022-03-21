@@ -14,11 +14,33 @@ function ViewProduct() {
                setLoading(false);
           });
      }, []);
+
+     /* const deleteProduct = (e, id) => {
+          e.preventDefault();
+          const thisClicked = e.currentTarget;
+          thisClicked.innerText = "Deleting";
+          axios.delete(`/api/delete_product/${id}`).then((res) => {
+               if (res.data.status === 200) {
+                    swal("Success", res.data.message, "success");
+                    thisClicked.closest("tr").remove(); //delete from table using JS
+               } else if (res.data.status === 404) {
+                    swal("Success", res.data.message, "success");
+                    thisClicked.innerText = "Delete";
+               }
+          });
+     }; */
+
      var viewProduct_Table_Data = "";
      if (loading) {
           return <h1>Loading Product</h1>;
      } else {
+          var productStatus = "";
           viewProduct_Table_Data = productList.map((item) => {
+               if (item.status == "1") {
+                    productStatus = "Hidden"; //Hidden means Deleted
+               } else if (item.status == "0") {
+                    productStatus = "Shown"; //Shown means Not Deleted
+               }
                return (
                     <tr key={item.id}>
                          <td>{item.id}</td>
@@ -34,11 +56,7 @@ function ViewProduct() {
                                    Edit
                               </Link>
                          </td>
-                         <td>
-                              <button type="button" className="btn btn-danger btn-sm">
-                                   Delete
-                              </button>
-                         </td>
+                         <td>{productStatus}</td>
                     </tr>
                );
           });
@@ -70,7 +88,7 @@ function ViewProduct() {
 
                                         <th>Edit</th>
 
-                                        <th>Delete</th>
+                                        <th>Status</th>
                                    </tr>
                               </thead>
                               <tbody>{viewProduct_Table_Data}</tbody>

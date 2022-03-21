@@ -118,7 +118,7 @@ function Category() {
                     <div className="tab-content" id="myTabContent">
                          <div className="tab-pane card-body border fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                               <div className="form-group mb-3">
-                                   <label>Slug</label>
+                                   <label>Companey Name</label>
                                    <input type="" name="slug" onChange={handleInput} value={categoryInput.slug} className="form-control" />
                                    <span> {categoryInput.errors_list.slug}</span>
                               </div>

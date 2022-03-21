@@ -10,6 +10,25 @@ use App\Models\AddProduct;
 
 class ProductController extends Controller
 {
+    public function delete_product(Request $request , $id)
+    {
+        $product =AddProduct::find($id);
+        if($product)
+        {
+            $product->delete();
+            return response()->json([
+                'status'=> 200,
+                'message'=>'Product Delete Successfully',
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=> 404,
+                'message'=>'Id Not found for delete',
+            ]);
+        }
+    }
+
     public function view_product(Request $request)
     {
         $product=AddProduct::all();
@@ -53,8 +72,7 @@ class ProductController extends Controller
             'original_price' => 'required|max: 20',
             'qty' => 'required|max: 4',
             'brand' => 'required|max: 20',
-            'categoryid' => 'required|max: 191',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max: 10000',
+            'category_id' => 'required|integer|max: 191',
         
         ]);
         
@@ -75,7 +93,7 @@ class ProductController extends Controller
             $product=AddProduct::find($id);
             if($product)
             {
-                $product->category_id=$request->input('categoryid');
+                $product->category_id=$request->input('category_id');
             $product->metatitle=$request->input('metatitle');
             $product->metakeywords=$request->input('metakeywords');
             $product->metadescription=$request->input('metadescription');
@@ -112,9 +130,9 @@ class ProductController extends Controller
 
 
             $product->description=$request->input('description');
-            $product->featured=$request->input('featured')==true ? '1':'0';
-            $product->popular=$request->input('popular')==true ? '1':'0';
-            $product->status=$request->input('status')==true ? '1':'0';
+            $product->featured=$request->input('featured');
+            $product->popular=$request->input('popular');
+            $product->status=$request->input('status');
             $product->update();
 
 
