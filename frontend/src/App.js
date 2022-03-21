@@ -1,7 +1,6 @@
 import React from "react";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./Components/frontend/Home";
 import Registration from "./Components/frontend/auth/Registration";
 import Login from "./Components/frontend/auth/Login";
 import axios from "axios";
@@ -9,6 +8,7 @@ import { Redirect } from "react-router-dom";
 import AdminPrivateRoute from "./routes/AdminPrivateRoute";
 import Page403 from "./Components/errors/Page403";
 import Page404 from "./Components/errors/Page404";
+import PublicRoute from "./PublicRoute";
 
 axios.defaults.baseURL = "http://localhost:8000/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -28,14 +28,16 @@ function App() {
           <div className="App">
                <Router>
                     <Switch>
-                         <Route exact path="/" component={Home} />
-                         <Route path="/403" component={Page403} />
-                         <Route path="/404" component={Page404} />
-                         <Route path="/login">{localStorage.getItem("auth_token") ? <Redirect to="/" /> : <Login />}</Route>
+                         {/* <Route exact path="/" component={Home} /> */}
+                         <AdminPrivateRoute path="/admin" name="Admin" />
 
+                         <Route path="/login">{localStorage.getItem("auth_token") ? <Redirect to="/" /> : <Login />}</Route>
                          <Route path="/registration">{localStorage.getItem("auth_token") ? <Redirect to="/" /> : <Registration />}</Route>
 
-                         <AdminPrivateRoute path="/admin" name="Admin" />
+                         <PublicRoute path="/" name="Home" />
+
+                         <Route path="/403" component={Page403} />
+                         <Route path="/404" component={Page404} />
                     </Switch>
                </Router>
           </div>
