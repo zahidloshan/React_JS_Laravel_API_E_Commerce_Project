@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 
-function AddProduct() {
+//Need to update in category id and required
+
+function EditProduct(props) {
      const [categorylist, setCategoryList] = useState([]);
-     const [image, setImage] = useState([]);
+     const history = useHistory();
+     const [loading, setLoading] = useState(true);
      const [errorslist, setError] = useState([]);
-     const [productInput, setProductInput] = useState({
+     const [image, setImage] = useState([]);
+     const [productInput, setProduct] = useState({
           categoryid: "",
           slug: "",
           name: "",
@@ -26,25 +31,36 @@ function AddProduct() {
           popular: "",
      });
 
-     const handleInput = (e) => {
-          e.persist();
-          setProductInput({ ...productInput, [e.target.name]: e.target.value });
-     };
-
-     const handleImage = (e) => {
-          setImage({ image: e.target.files[0] });
-     };
-
      useEffect(() => {
           axios.get(`/api/all_category`).then((res) => {
                if (res.data.status === 200) {
                     setCategoryList(res.data.category);
                }
           });
-     }, []);
 
-     const productSubmit = (e) => {
+          const product_id = props.match.params.id;
+          axios.get(`/api/edit_product/${product_id}`).then((res) => {
+               if (res.data.status === 200) {
+                    setProduct(res.data.product);
+               } else {
+                    swal("Data not Found by this id", res.data.message, "warning");
+                    history.push("/admin/view_product");
+               }
+               setLoading(false);
+          });
+     }, [props.match.params.id, history]);
+     const handleImage = (e) => {
+          setImage({ image: e.target.files[0] });
+     };
+
+     const handleInput = (e) => {
+          e.persist();
+          setProduct({ ...productInput, [e.target.name]: e.target.value });
+     };
+
+     const updateSubmit = (e) => {
           e.preventDefault();
+          const product_id = props.match.params.id;
           const formData = new FormData();
 
           formData.append("image", image.image);
@@ -66,11 +82,11 @@ function AddProduct() {
           formData.append("popular", productInput.popular);
           formData.append("status", productInput.status);
 
-          axios.post(`/api/add_product`, formData).then((res) => {
+          axios.post(`/api/update_product/${product_id}`, formData).then((res) => {
                if (res.data.status === 200) {
                     swal("Success", res.data.message, "success");
                     setError([]);
-                    setProductInput({
+                    setProduct({
                          categoryid: "",
                          slug: "",
                          name: "",
@@ -94,20 +110,24 @@ function AddProduct() {
                }
           });
      };
+
+     if (loading) {
+          return <h1>Edit Product loading</h1>;
+     }
      return (
           <div className="container py-10">
                <div className="card mt-4">
                     <div className="card-header">
                          <h2 className="mt-4">
-                              <Link className="btn btn-primary btn-sm float-end" to="/admin/view_category">
-                                   View Catergory
+                              <Link className="btn btn-primary btn-sm float-end" to="/admin/view_product">
+                                   View Product
                               </Link>
-                              Add Product
+                              Edit Product
                          </h2>
                     </div>
                </div>
 
-               <form onSubmit={productSubmit} encType="multipart/from-data">
+               <form onSubmit={updateSubmit} encType="multipart/from-data">
                     <ul className="nav nav-tabs" id="myTab" role="tablist">
                          <li className="nav-item" role="presentation">
                               <button
@@ -177,28 +197,26 @@ function AddProduct() {
                               </div>
                               <div className="form-group mb-3">
                                    <label>Slug</label>
-                                   <input type="" name="slug" onChange={handleInput} value={productInput.slug} className="form-control" />
+                                   <input type="" value={productInput.slug} onChange={handleInput} name="slug" className="form-control" />
                                    <small className="text-danger">{errorslist.slug}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Name</label>
-                                   <input type="" name="name" onChange={handleInput} value={productInput.name} className="form-control" />
-                                   <small className="text-danger">{errorslist.name}</small>
+                                   <input type="" name="name" value={productInput.name} onChange={handleInput} className="form-control" />
                               </div>
                               <div className="form-group mb-3">
                                    <label>Description</label>
                                    <textarea
                                         type=""
                                         name="description"
-                                        onChange={handleInput}
                                         value={productInput.description}
+                                        onChange={handleInput}
                                         className="form-control"
                                    />
-                                   <small className="text-danger">{errorslist.description}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Status</label>
-                                   <input type="checkbox" onChange={handleInput} value={productInput.status} name="status" /> Status 1=yes
+                                   <input type="checkbox" value={productInput.status} onChange={handleInput} name="status" /> Status 1=yes
                                    and 0=no
                               </div>
                          </div>
@@ -209,33 +227,30 @@ function AddProduct() {
                                    <input
                                         type=""
                                         name="metatitle"
-                                        onChange={handleInput}
                                         value={productInput.metatitle}
+                                        onChange={handleInput}
                                         className="form-control"
                                    />
-                                   <small className="text-danger">{errorslist.metatitle}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Meta Keywords</label>
                                    <textarea
                                         type=""
                                         name="metakeywords"
-                                        onChange={handleInput}
                                         value={productInput.metakeywords}
+                                        onChange={handleInput}
                                         className="form-control"
                                    />
-                                   <small className="text-danger">{errorslist.metakeywords}</small>
                               </div>
                               <div className="form-group mb-3">
                                    <label>Meta Description</label>
                                    <textarea
                                         type=""
                                         name="metadescription"
-                                        onChange={handleInput}
                                         value={productInput.metadescription}
+                                        onChange={handleInput}
                                         className="form-control"
                                    />
-                                   <small className="text-danger">{errorslist.metadescription}</small>
                               </div>
                          </div>
 
@@ -246,11 +261,10 @@ function AddProduct() {
                                         <input
                                              type="text"
                                              name="selling_price"
-                                             onChange={handleInput}
                                              value={productInput.selling_price}
+                                             onChange={handleInput}
                                              className="form-control"
                                         />
-                                        <small className="text-danger">{errorslist.selling_price}</small>
                                    </div>
 
                                    <div className="col-md-4 form-group mb-3">
@@ -259,11 +273,10 @@ function AddProduct() {
                                         <input
                                              type="text"
                                              name="original_price"
-                                             onChange={handleInput}
                                              value={productInput.original_price}
+                                             onChange={handleInput}
                                              className="form-control"
                                         />
-                                        <small className="text-danger">{errorslist.original_price}</small>
                                    </div>
 
                                    <div className="col-md-4 form-group mb-3">
@@ -271,11 +284,10 @@ function AddProduct() {
                                         <input
                                              type="text"
                                              name="qty"
-                                             onChange={handleInput}
                                              value={productInput.qty}
+                                             onChange={handleInput}
                                              className="form-control"
                                         />
-                                        <small className="text-danger">{errorslist.qty}</small>
                                    </div>
 
                                    <div className="col-md-4 form-group mb-3">
@@ -284,18 +296,21 @@ function AddProduct() {
                                         <input
                                              type="text"
                                              name="brand"
-                                             onChange={handleInput}
                                              value={productInput.brand}
+                                             onChange={handleInput}
                                              className="form-control"
                                         />
-                                        <small className="text-danger">{errorslist.brand}</small>
                                    </div>
 
                                    <div className="col-md-8 form-group mb-3">
                                         <label>Image</label>
 
-                                        <input type="file" name="image" onChange={handleImage} className="form-control" />
-                                        <small className="text-danger">{errorslist.image}</small>
+                                        <input type="file" onChange={handleImage} name="image" className="form-control" />
+                                        <img
+                                             src={`http://localhost:8000/${productInput.image}`}
+                                             width="40px"
+                                             alt={productInput.image}
+                                        ></img>
                                    </div>
                                    <div className="col-md-4 form-group mb-3">
                                         <label>Featured (checked=shown)</label>
@@ -343,4 +358,4 @@ function AddProduct() {
      );
 }
 
-export default AddProduct;
+export default EditProduct;

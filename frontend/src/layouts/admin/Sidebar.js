@@ -54,7 +54,7 @@ const Sidebar = () => {
                                    <Link className="nav-link" to="/admin/add_product">
                                         Add Product
                                    </Link>
-                                   <Link className="nav-link" to="/about/view_product">
+                                   <Link className="nav-link" to="/admin/view_product">
                                         View Product
                                    </Link>
                               </nav>
