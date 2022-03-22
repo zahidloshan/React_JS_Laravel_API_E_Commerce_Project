@@ -4,8 +4,6 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
 
-//Need to update in category id and required
-
 function EditProduct(props) {
      const [categorylist, setCategoryList] = useState([]);
      const history = useHistory();
