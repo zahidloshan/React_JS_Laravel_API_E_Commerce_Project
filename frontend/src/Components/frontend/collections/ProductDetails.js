@@ -6,10 +6,9 @@ import swal from "sweetalert";
 function ProductDetails(props) {
      const history = useHistory();
 
-     const [categoyList, setCategoyList] = useState([]);
      const [productList, setProductList] = useState([]);
      const [loading, setLoading] = useState(true);
-     const productListCount = productList.length;
+     const [ProductQuantity, setProductQuantity] = useState(1);
      useEffect(() => {
           const category_slug = props.match.params.category;
           const product_slug = props.match.params.product;
@@ -26,6 +25,39 @@ function ProductDetails(props) {
                }
           });
      }, [props.match.params.category, props.match.params.product, history]);
+     const handleIncrement = (e) => {
+          if (ProductQuantity < 15) {
+               setProductQuantity((prevCount) => prevCount + 1);
+          }
+     };
+     const handleDecrement = (e) => {
+          if (ProductQuantity > 1) {
+               setProductQuantity((prevCount) => prevCount - 1);
+          }
+     };
+     const submitForAddCart = (e) => {
+          e.preventDefault();
+          const data = {
+               product_id: productList.id,
+               product_quantity: ProductQuantity,
+          };
+
+          axios.post(`/api/add_to_cart`, data).then((res) => {
+               if (res.data.status === 200) {
+                    swal("Success", res.data.message, "success");
+               } else if (res.data.status === 404) {
+                    //Login needed for  Add to Cart
+                    history.push("/login");
+                    swal("Warning", res.data.message, "error");
+               } else if (res.data.status === 401) {
+                    //Product Not Found
+                    swal("Warning", res.data.message, "error");
+               } else if (res.data.status === 409) {
+                    //Already In Cart
+                    swal("Success", res.data.message, "success");
+               }
+          });
+     };
      if (loading) {
           return <h1>Product Details is loading....</h1>;
      } else {
@@ -37,18 +69,18 @@ function ProductDetails(props) {
                          <div className="row">
                               <div className="col-md-3 mt-3">
                                    <div className="input-group">
-                                        <button type="button" className="input-group-text">
+                                        <button type="button" onClick={handleDecrement} className="input-group-text">
                                              -
                                         </button>
-                                        <input type="text" className="form-control text-center" value="1" />
-                                        <button type="button" className="input-group-text">
+                                        <div className="form-control text-center">{ProductQuantity}</div>
+                                        <button type="button" onClick={handleIncrement} className="input-group-text">
                                              +
                                         </button>
                                    </div>
                               </div>
 
                               <div className="col-md-3 mt-3">
-                                   <button type="button" className="btn btn-primary w-100">
+                                   <button type="button" onClick={submitForAddCart} className="btn btn-primary w-100">
                                         Add to Cart
                                    </button>
                               </div>
@@ -63,13 +95,14 @@ function ProductDetails(props) {
                );
           }
      }
+
      return (
           <div>
                <div className="py-3 bg-warning">
                     <div className="container">
                          <h2>
                               <Link to="/collection">
-                                   Category / <Link to={"/collection/" + productList.slug}> Product List </Link>
+                                   Category / <Link to={"/collection/" + productList.slug}> Product List /</Link>
                               </Link>
                               {productList.name}
                          </h2>

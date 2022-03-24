@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\FrontendController;
+use App\Http\Controllers\API\CartController;
 
 
 /*
@@ -25,6 +26,7 @@ Route::post('login',[AuthController::class,'login']);
 Route::get('getCategory',[FrontendController::class,'getCategory']);
 Route::get('fetchproducts/{slug}',[FrontendController::class,'product']);
 Route::get('product_details/{category_slug}/{product_slug}',[FrontendController::class,'product_details']);
+Route::post('add_to_cart',[CartController::class,'add_to_cart']);
 
 Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function () {
     Route::get('/checkingAuthenticated', function () { 
