@@ -58,4 +58,26 @@ class CartController extends Controller
             ]);
         }
     }
+    public function cart_view()
+    {
+        if(auth('sanctum')->check())
+        {
+            $user_id=auth('sanctum')->user()->id;
+            $cart_data=Cart::where('user_id',$user_id)->get();
+        
+                return response()->json([
+                    'status'=>200,
+                    'cart'=>$cart_data,
+                ]);
+            
+
+        }
+        else{
+            return response()->json([
+                'status'=>404,
+                'message'=>'Login First To View Cart',
+            ]);
+        }
+
+    }
 }

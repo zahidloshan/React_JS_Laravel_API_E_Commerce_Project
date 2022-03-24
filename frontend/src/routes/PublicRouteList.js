@@ -1,4 +1,5 @@
 import About from "../Components/frontend/About";
+import Cart from "../Components/frontend/Cart";
 import ProductDetails from "../Components/frontend/collections/ProductDetails";
 import ViewCategory from "../Components/frontend/collections/ViewCategory";
 import ViewProduct from "../Components/frontend/collections/ViewProduct";
@@ -12,6 +13,7 @@ const PublicRouteList = [
      { path: "/collection", exact: true, name: "ViewCategory", component: ViewCategory },
      { path: "/collection/:slug", exact: true, name: "ViewProduct", component: ViewProduct },
      { path: "/collection/:category/:product", exact: true, name: "ProductDetails", component: ProductDetails },
+     { path: "/cart", exact: true, name: "CartView", component: Cart },
 ];
 
 export default PublicRouteList;
