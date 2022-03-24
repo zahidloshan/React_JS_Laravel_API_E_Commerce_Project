@@ -35,9 +35,18 @@ function ViewProduct(props) {
                     return (
                          <div className="col-md-4" key={item.id}>
                               <div className="card">
-                                   <img src={`http://localhost:8000/${item.image}`} className="w-100" alt={item.image}></img>
+                                   <Link to={`/collection/${item.category.slug}/${item.slug}`}>
+                                        <img src={`http://localhost:8000/${item.image}`} className="img-thumbnail" alt={item.image}></img>
+                                   </Link>
                                    <div className="card-body">
-                                        <h5>{item.name}</h5>
+                                        <h5>Selling Price : {item.selling_price}</h5>
+                                        <h5>
+                                             Original Price :<strike>{item.original_price}</strike>
+                                        </h5>
+
+                                        <Link to={`/collection/${item.category.slug}/${item.slug}`}>
+                                             <h5>{item.name}</h5>
+                                        </Link>
                                    </div>
                               </div>
                          </div>
@@ -55,7 +64,10 @@ function ViewProduct(props) {
           <div>
                <div className="py-3 bg-warning">
                     <div className="container">
-                         <h2>Product /{categoyList.name}</h2>
+                         <h2>
+                              <Link to="/collection"> Category List /</Link>
+                              {categoyList.name}
+                         </h2>
                     </div>
                </div>
                <div className="py-3">

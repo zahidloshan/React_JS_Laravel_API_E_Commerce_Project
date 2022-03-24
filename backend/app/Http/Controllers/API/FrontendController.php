@@ -50,4 +50,34 @@ class FrontendController extends Controller
             ]);
         }
     }
+
+    public function product_details($category_slug,$product_slug)
+    {
+        $category=Category::where('slug',$category_slug)->where('status','0')->first();
+        if($category)
+        {
+            $product=AddProduct::where('category_id',$category->id)->where('slug',$product_slug)->where('status','0')->first();
+            if($product)
+            {
+                return response()->json([
+                    'status'=>200,
+                    'product'=>$product,
+                ]);
+
+            }
+            else{
+                return response()->json([
+                    'status'=> 400,
+                    'message'=>'No Product  found',
+                ]);
+            }
+        }
+        else{
+            return response()->json([
+                'status'=> 404,
+                'message'=>'No Category found',
+            ]);
+        }
+
+    }
 }
