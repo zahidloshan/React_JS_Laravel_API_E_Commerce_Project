@@ -79,5 +79,73 @@ class CartController extends Controller
             ]);
         }
 
+        
+    }
+
+    public function delete_cart_item(Request $request , $id)
+    {
+        if(auth('sanctum')->check())
+        {
+            $user_id=auth('sanctum')->user()->id;
+
+            $cart_item =Cart::where('id',$id)->where('user_id',$user_id)->first();
+        if($cart_item)
+        {
+            $cart_item->delete();
+            return response()->json([
+                'status'=> 200,
+                'message'=>'Cart Item Delete Successfully',
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=> 404,
+                'message'=>'Id Not found for delete',
+            ]);
+        }
+        }
+        else{
+            return response()->json([
+                'status'=>401,
+                'message'=>'Login First To View Cart',
+            ]);
+        }
+
+    }
+
+    public function cart_update($cart_id,$manage_qty)
+    {
+        if(auth('sanctum')->check())
+        {
+            $user_id=auth('sanctum')->user()->id;
+            $cart_data=Cart::where('user_id',$user_id)->where('id',$cart_id)->first();
+
+            if($manage_qty=="increment")
+            {
+                $cart_data->product_qty+=1;
+
+            }
+            else if($manage_qty=="decrement")
+            {
+                $cart_data->product_qty-=1;
+
+
+            }
+            $cart_data->update();
+        
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Cart Quantity Updated',
+                ]);
+            
+
+        }
+        else{
+            return response()->json([
+                'status'=>404,
+                'message'=>'Login First To Update Quantity',
+            ]);
+        }
+
     }
 }

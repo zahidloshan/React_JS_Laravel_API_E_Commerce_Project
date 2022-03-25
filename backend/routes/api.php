@@ -28,6 +28,10 @@ Route::get('fetchproducts/{slug}',[FrontendController::class,'product']);
 Route::get('product_details/{category_slug}/{product_slug}',[FrontendController::class,'product_details']);
 Route::post('add_to_cart',[CartController::class,'add_to_cart']);
 Route::get('cart_view',[CartController::class,'cart_view']);
+Route::put('cart_quantiy_update/{cart_id}/{manage_qty}',[CartController::class,'cart_update']);
+Route::delete('delete_cart_item/{id}',[CartController::class,'delete_cart_item']);
+
+
 
 Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function () {
     Route::get('/checkingAuthenticated', function () { 
