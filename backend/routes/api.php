@@ -7,6 +7,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\FrontendController;
 use App\Http\Controllers\API\CartController;
+use App\Http\Controllers\API\CheckoutController;
 
 
 /*
@@ -26,10 +27,13 @@ Route::post('login',[AuthController::class,'login']);
 Route::get('getCategory',[FrontendController::class,'getCategory']);
 Route::get('fetchproducts/{slug}',[FrontendController::class,'product']);
 Route::get('product_details/{category_slug}/{product_slug}',[FrontendController::class,'product_details']);
+//Cart
 Route::post('add_to_cart',[CartController::class,'add_to_cart']);
 Route::get('cart_view',[CartController::class,'cart_view']);
 Route::put('cart_quantiy_update/{cart_id}/{manage_qty}',[CartController::class,'cart_update']);
 Route::delete('delete_cart_item/{id}',[CartController::class,'delete_cart_item']);
+//Order
+Route::post('buyproduct',[CheckoutController::class,'placeorder']);
 
 
 
