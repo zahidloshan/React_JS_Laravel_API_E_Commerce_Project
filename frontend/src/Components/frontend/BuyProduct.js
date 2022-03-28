@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import swal from "sweetalert";
+import emailjs from "@emailjs/browser";
 
 function BuyProduct() {
      const history = useHistory();
-
+     const form = useRef();
      const [cart, setCart] = useState([]);
      const [error, setErrors] = useState([]);
      const [loading, setLoading] = useState(true);
@@ -38,11 +39,20 @@ function BuyProduct() {
                state: buyingInput.state,
                zipcode: buyingInput.zipcode,
           };
+          emailjs.sendForm("service_iqag6kpdd", "template_ff66kwb", form.current, "uF5qK1esHgCY7AZe8").then(
+               (result) => {
+                    console.log(result.text);
+               },
+               (error) => {
+                    console.log(error.text);
+               }
+          );
 
           axios.post(`/api/buyproduct`, data).then((res) => {
                if (res.data.status === 200) {
                     swal("Placed Order Successfully", res.data.message, "success");
                     setErrors([]);
+
                     history.push("/thank_you");
                } else if (res.data.status === 422) {
                     swal("Fill Up all fields", "", "error");
@@ -70,11 +80,10 @@ function BuyProduct() {
      if (cart.length > 0) {
           cartListAvaiCheckOutInfo = (
                <div>
-                    {" "}
                     <div className="card-header">
                          <h1>Information</h1>
                     </div>
-                    <form>
+                    <form ref={form} onSubmit={submitOrder}>
                          <div className="card-body">
                               <div className="row">
                                    <div className="col-md-7">
@@ -182,6 +191,7 @@ function BuyProduct() {
                                                        />
                                                        <small className="text-danger">{error.zipcode}</small>
                                                   </div>
+
                                                   <hr />
                                                   <button type="submit" onClick={submitOrder} className="btn btn-primary">
                                                        Place Order
@@ -209,7 +219,13 @@ function BuyProduct() {
                                                             totalPrice += item.product.selling_price * item.product_qty;
                                                             return (
                                                                  <tr key={item.name}>
-                                                                      <td>{item.product.name}</td>
+                                                                      <td>
+                                                                           <input
+                                                                                name="productname"
+                                                                                value={item.product.name}
+                                                                                readonly
+                                                                           ></input>
+                                                                      </td>
                                                                       <td>{item.product.selling_price}</td>
                                                                       <td>{item.product_qty}</td>
                                                                       <td>{item.product.selling_price * item.product_qty}</td>
@@ -220,7 +236,9 @@ function BuyProduct() {
                                                             <td colSpan="3" className="text-end">
                                                                  Grand Total
                                                             </td>
-                                                            <td colSpan="2">{totalPrice}</td>
+                                                            <td colSpan="2">
+                                                                 <input name="totalprice" value={totalPrice} readonly></input>
+                                                            </td>
                                                        </tr>
                                                   </tbody>
                                              </table>
