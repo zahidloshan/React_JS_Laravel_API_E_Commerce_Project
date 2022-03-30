@@ -60,6 +60,13 @@ const Sidebar = () => {
                               </nav>
                          </div>
 
+                         <Link className="nav-link" to="/admin/order">
+                              <div className="sb-nav-link-icon">
+                                   <i className="fas fa-tachometer-alt"></i>
+                              </div>
+                              Order
+                         </Link>
+
                          <div className="sb-sidenav-menu-heading">Interface</div>
                          <Link
                               className="nav-link collapsed"

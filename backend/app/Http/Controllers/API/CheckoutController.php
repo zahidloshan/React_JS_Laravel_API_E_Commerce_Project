@@ -66,7 +66,7 @@ class CheckoutController extends Controller
                 $order->payment_mode = $request->payment_system;
                 $order->payment_id = $request->payment_id;
 
-                $order->tracking_no = 'fundaecom'.rand (1111,9999);
+                $order->tracking_no = 'react'.rand (1111,9999);
 
                 $order->save();
 

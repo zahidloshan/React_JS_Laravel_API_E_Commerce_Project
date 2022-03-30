@@ -8,6 +8,7 @@ use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\FrontendController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CheckoutController;
+use App\Http\Controllers\API\OrderController;
 
 
 /*
@@ -56,6 +57,9 @@ Route::middleware(['auth:sanctum','isAPIAdmin'])->group(function () {
     Route::get('edit_product/{id}',[ProductController::class,'edit_product']);
     Route::post('update_product/{id}',[ProductController::class,'update_product']);
     Route::delete('delete_product/{id}',[ProductController::class,'delete_product']);
+    
+    //Order
+    Route::get('view_order_list',[OrderController::class,'view_order_list']);
 
 
 
