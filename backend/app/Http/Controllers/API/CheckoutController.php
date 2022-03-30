@@ -63,7 +63,8 @@ class CheckoutController extends Controller
 
                 $order->zipcode = $request->zipcode;
 
-                $order->payment_mode = "COD";
+                $order->payment_mode = $request->payment_system;
+                $order->payment_id = $request->payment_id;
 
                 $order->tracking_no = 'fundaecom'.rand (1111,9999);
 
@@ -108,5 +109,56 @@ class CheckoutController extends Controller
                 'message'=>'Login First To Place Order',
             ]);
         }
+    }
+
+    public function order_validate(Request $request)
+    {
+        if(auth('sanctum')->check())
+        {
+
+            $validator = Validator::make($request->all(), [
+
+                'firstname' => 'required|max: 191',
+                'lastname' => 'required|max: 191',
+                'phone' => 'required|max: 191',
+                'email' => 'required|max: 191',
+                'address' => 'required|max: 191',
+                'city' => 'required|max: 191',
+                'state' => 'required|max: 191',
+                'zipcode' => 'required|max: 191',
+            
+            ]);
+            
+            if($validator->fails())
+            
+            {
+            
+                return response()->json([
+                    'status'=> 422,
+                    'errors'=>$validator->messages(),
+                
+                ]);
+            
+            }
+            
+            else
+            {
+                return response()->json([
+                    'status'=> 200,
+                    'message'=>'form validation is completed',
+                
+                ]);
+            }
+            
+            
+
+        }
+        else{
+            return response()->json([
+                'status'=>401,
+                'message'=>'Login First To Place Order',
+            ]);
+        }
+
     }
 }

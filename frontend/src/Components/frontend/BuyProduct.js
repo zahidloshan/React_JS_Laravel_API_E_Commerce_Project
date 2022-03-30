@@ -11,6 +11,7 @@ function BuyProduct() {
      const [error, setErrors] = useState([]);
      const [loading, setLoading] = useState(true);
      var totalPrice = 0;
+     var totalPricee = 0;
      const [buyingInput, setBuyingInput] = useState({
           firstname: "",
           lastname: "",
@@ -27,7 +28,7 @@ function BuyProduct() {
           setBuyingInput({ ...buyingInput, [e.target.name]: e.target.value });
      };
 
-     const submitOrder = (e) => {
+     const submitOrder = (e, payment_system) => {
           e.preventDefault();
           const data = {
                firstname: buyingInput.firstname,
@@ -38,27 +39,89 @@ function BuyProduct() {
                city: buyingInput.city,
                state: buyingInput.state,
                zipcode: buyingInput.zipcode,
+               payment_id: "",
           };
-          emailjs.sendForm("service_iqag6kpdd", "template_ff66kwb", form.current, "uF5qK1esHgCY7AZe8").then(
-               (result) => {
-                    console.log(result.text);
-               },
-               (error) => {
-                    console.log(error.text);
-               }
-          );
 
-          axios.post(`/api/buyproduct`, data).then((res) => {
-               if (res.data.status === 200) {
-                    swal("Placed Order Successfully", res.data.message, "success");
-                    setErrors([]);
+          var mail_data = {
+               firstname: buyingInput.firstname,
+               email: buyingInput.email,
+               address: buyingInput.address,
+               productname: cart.map((item) => {
+                    return item.product.name;
+               }),
+               totalprice: cart.map((item) => {
+                    return (totalPricee += item.product.selling_price * item.product_qty);
+               }),
+          };
 
-                    history.push("/thank_you");
-               } else if (res.data.status === 422) {
-                    swal("Fill Up all fields", "", "error");
-                    setErrors(res.data.errors);
-               }
-          });
+          switch (payment_system) {
+               case "cod":
+                    axios.post(`/api/buyproduct`, data).then((res) => {
+                         if (res.data.status === 200) {
+                              swal("Placed Order Successfully", res.data.message, "success");
+
+                              emailjs.send("service_iqag6kpdd", "template_ff66kwb", mail_data, "uF5qK1esHgCY7AZe8").then(
+                                   (result) => {
+                                        console.log(result.text);
+                                   },
+                                   (error) => {
+                                        console.log(error.text);
+                                   }
+                              );
+                              setErrors([]);
+
+                              history.push("/thank_you");
+                         } else if (res.data.status === 422) {
+                              swal("Fill Up all fields", "", "error");
+                              setErrors(res.data.errors);
+                         }
+                    });
+                    break;
+
+               case "razorpay":
+                    axios.post(`/api/order_validate`, data).then((res) => {
+                         if (res.data.status === 200) {
+                              setErrors([]);
+                              var options = {
+                                   key: "rzp_test_7YgwiNNRNLUqCu", // Enter the Key ID generated from the Dashboard
+                                   amount: "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                   name: "Acme Corp",
+                                   description: "Test Transaction",
+                                   image: "https://example.com/your_logo",
+                                   order_id: "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                   handler: function (response) {
+                                        alert(response.razorpay_payment_id);
+                                        data.payment_id = response.razorpay_payment_id;
+                                        axios.post(`/api/buyproduct`, data).then((res) => {
+                                             if (res.data.status === 200) {
+                                                  swal("Placed Order Successfully", res.data.message, "success");
+                                                  setErrors([]);
+
+                                                  history.push("/thank_you");
+                                             }
+                                        });
+                                   },
+                                   prefill: {
+                                        name: data.firstname,
+                                        email: data.email,
+                                        contact: data.phone,
+                                   },
+
+                                   theme: {
+                                        color: "#3399cc",
+                                   },
+                              };
+                              var rzp1 = new window.Razorpay(options);
+                              rzp1.open();
+                         } else if (res.data.status === 422) {
+                              swal("Fill Up all fields", "", "error");
+                              setErrors(res.data.errors);
+                         }
+                    });
+                    break;
+               default:
+                    break;
+          }
      };
 
      useEffect(() => {
@@ -193,9 +256,24 @@ function BuyProduct() {
                                                   </div>
 
                                                   <hr />
-                                                  <button type="submit" onClick={submitOrder} className="btn btn-primary">
-                                                       Place Order
-                                                  </button>
+                                                  <div className="form-group col-md-9">
+                                                       <button
+                                                            type="submit"
+                                                            onClick={(e) => submitOrder(e, "cod")}
+                                                            className="btn btn-primary"
+                                                       >
+                                                            Place Order(COD)
+                                                       </button>
+                                                  </div>
+                                                  <div className="form-group col-md-3">
+                                                       <button
+                                                            type="submit"
+                                                            onClick={(e) => submitOrder(e, "razorpay")}
+                                                            className="btn btn-primary"
+                                                       >
+                                                            Online Payment
+                                                       </button>
+                                                  </div>
                                              </div>
                                         </div>
                                    </div>
@@ -219,13 +297,7 @@ function BuyProduct() {
                                                             totalPrice += item.product.selling_price * item.product_qty;
                                                             return (
                                                                  <tr key={item.name}>
-                                                                      <td>
-                                                                           <input
-                                                                                name="productname"
-                                                                                value={item.product.name}
-                                                                                readonly
-                                                                           ></input>
-                                                                      </td>
+                                                                      <td>{item.product.name}</td>
                                                                       <td>{item.product.selling_price}</td>
                                                                       <td>{item.product_qty}</td>
                                                                       <td>{item.product.selling_price * item.product_qty}</td>
@@ -236,9 +308,7 @@ function BuyProduct() {
                                                             <td colSpan="3" className="text-end">
                                                                  Grand Total
                                                             </td>
-                                                            <td colSpan="2">
-                                                                 <input name="totalprice" value={totalPrice} readonly></input>
-                                                            </td>
+                                                            <td colSpan="2">{totalPrice}</td>
                                                        </tr>
                                                   </tbody>
                                              </table>

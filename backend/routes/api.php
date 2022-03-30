@@ -34,6 +34,7 @@ Route::put('cart_quantiy_update/{cart_id}/{manage_qty}',[CartController::class,'
 Route::delete('delete_cart_item/{id}',[CartController::class,'delete_cart_item']);
 //Order
 Route::post('buyproduct',[CheckoutController::class,'placeorder']);
+Route::post('order_validate',[CheckoutController::class,'order_validate']);
 
 
 
