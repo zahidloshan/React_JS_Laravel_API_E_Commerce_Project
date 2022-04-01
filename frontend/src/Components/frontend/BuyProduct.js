@@ -70,7 +70,7 @@ function BuyProduct() {
                               );
                               setErrors([]);
 
-                              history.push("/thank_you");
+                              history.push("/thank_your");
                          } else if (res.data.status === 422) {
                               swal("Fill Up all fields", "", "error");
                               setErrors(res.data.errors);

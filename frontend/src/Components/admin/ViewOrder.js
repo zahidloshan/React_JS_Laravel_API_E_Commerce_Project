@@ -16,13 +16,9 @@ function ViewOrder() {
      var viewOrder_Table_Data = "";
      if (loading) {
           return (
-               <div className="container py-10">
-                    <div className="row justify-content-center">
-                         <div className="col-md-6">
-                              <div class="spinner-grow text-success" role="status">
-                                   <span class="sr-only"></span>
-                              </div>
-                         </div>
+               <div className="container text-center d-flex align-items-center justify-content-center">
+                    <div className="spinner-grow text-success" role="status">
+                         <span className="sr-only"></span>
                     </div>
                </div>
           );
