@@ -79,7 +79,7 @@ function BuyProduct() {
                     break;
 
                case "razorpay":
-                    axios.post(`/api/order_validate`, data).then((res) => {
+                    /* axios.post(`/api/order_validate`, data).then((res) => {
                          if (res.data.status === 200) {
                               setErrors([]);
                               var options = {
@@ -117,7 +117,7 @@ function BuyProduct() {
                               swal("Fill Up all fields", "", "error");
                               setErrors(res.data.errors);
                          }
-                    });
+                    }); */
                     break;
                default:
                     break;
@@ -266,13 +266,16 @@ function BuyProduct() {
                                                        </button>
                                                   </div>
                                                   <div className="form-group col-md-3">
-                                                       <button
+                                                       {/* <button
                                                             type="submit"
                                                             onClick={(e) => submitOrder(e, "razorpay")}
                                                             className="btn btn-primary"
                                                        >
                                                             Online Payment
-                                                       </button>
+                                                       </button> */}
+                                                       <a className="btn btn-primary" href="http://127.0.0.1:8000/checkout" target="_blank">
+                                                            Online Payment
+                                                       </a>
                                                   </div>
                                              </div>
                                         </div>
