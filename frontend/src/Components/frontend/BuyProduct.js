@@ -12,6 +12,11 @@ function BuyProduct() {
      const [loading, setLoading] = useState(true);
      var totalPrice = 0;
      var totalPricee = 0;
+     const userid = cart.map((item) => {
+          return item.user_id;
+     });
+     var firstuserid = userid[0];
+     var url = "http://127.0.0.1:8000/checkout?key=" + firstuserid + "";
      const [buyingInput, setBuyingInput] = useState({
           firstname: "",
           lastname: "",
@@ -273,7 +278,8 @@ function BuyProduct() {
                                                        >
                                                             Online Payment
                                                        </button> */}
-                                                       <a className="btn btn-primary" href="http://127.0.0.1:8000/checkout" target="_blank">
+
+                                                       <a className="btn btn-primary" href={url} target="_blank">
                                                             Online Payment
                                                        </a>
                                                   </div>

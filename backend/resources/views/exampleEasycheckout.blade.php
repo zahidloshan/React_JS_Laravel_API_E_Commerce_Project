@@ -72,7 +72,7 @@
                     <div class="col-md-12 mb-3">
                         <label for="firstName">Full name</label>
                         <input type="text" name="customer_name" class="form-control" id="customer_name" placeholder=""
-                               value="John Doe" required>
+                                required>
                         <div class="invalid-feedback">
                             Valid customer name is required.
                         </div>
@@ -86,7 +86,7 @@
                             <span class="input-group-text">+88</span>
                         </div>
                         <input type="text" name="customer_mobile" class="form-control" id="mobile" placeholder="Mobile"
-                               value="01711xxxxxx" required>
+                                required>
                         <div class="invalid-feedback" style="width: 100%;">
                             Your Mobile number is required.
                         </div>
@@ -96,7 +96,7 @@
                 <div class="mb-3">
                     <label for="email">Email <span class="text-muted">(Optional)</span></label>
                     <input type="email" name="customer_email" class="form-control" id="email"
-                           placeholder="you@example.com" value="you@example.com" required>
+                           placeholder="you@example.com" required>
                     <div class="invalid-feedback">
                         Please enter a valid email address for shipping updates.
                     </div>
@@ -105,7 +105,7 @@
                 <div class="mb-3">
                     <label for="address">Address</label>
                     <input type="text" class="form-control" id="address" placeholder="1234 Main St"
-                           value="93 B, New Eskaton Road" required>
+                            required>
                     <div class="invalid-feedback">
                         Please enter your shipping address.
                     </div>
@@ -148,7 +148,7 @@
                 <hr class="mb-4">
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="same-address">
-                    <input type="hidden" value="1200" name="amount" id="total_amount" required/>
+                    <input type="hidden" value={{$item->product->selling_price*$item['product_qty']}} name="amount" id="total_amount" required/>
                     <label class="custom-control-label" for="same-address">Shipping address is the same as my billing
                         address</label>
                 </div>
@@ -195,6 +195,22 @@
     obj.cus_email = $('#email').val();
     obj.cus_addr1 = $('#address').val();
     obj.amount = $('#total_amount').val();
+
+    $("#customer_name").change(function(){
+        obj.cus_name = $('#customer_name').val();
+    });
+    $("#mobile").change(function(){
+        obj.cus_phone = $('#mobile').val();
+    });
+    $("#email").change(function(){
+        obj.cus_email = $('#email').val();
+    });
+    $("#address").change(function(){
+        obj.cus_addr1 = $('#address').val();
+    });
+    $("#total_amount").change(function(){
+        obj.amount = $('#total_amount').val();
+    });
 
     $('#sslczPayBtn').prop('postdata', obj);
 

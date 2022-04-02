@@ -10,10 +10,13 @@ use App\Models\Cart;
 
 class SslCommerzPaymentController extends Controller
 {
-    public function show()
+    private $user_id;
+    
+    public function show(Request $request)
     {
+        $this->user_id=$request->key;
         
-        $data=Cart::all();
+        $data=Cart::where('user_id',$this->user_id)->get();
         return view('exampleEasyCheckout',['collection'=>$data]);
         //return Cart::all();
         
@@ -34,9 +37,17 @@ class SslCommerzPaymentController extends Controller
         # Here you have to receive all the order data to initate the payment.
         # Let's say, your oder transaction informations are saving in a table called "orders"
         # In "orders" table, order unique identity is "transaction_id". "status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
-
+        $validatedData = $request->validate([
+            'customer_name' => ['required','max:255'],
+            'customer_mobile' => ['required'],
+        ]);
+        if($validatedData->fails())
+        {
+            return $validatedData->input();
+        }
+        else{
         $post_data = array();
-        $post_data['total_amount'] = '10'; # You cant not pay less than 10
+        $post_data['total_amount'] = '1020'; # You cant not pay less than 10
         $post_data['currency'] = "BDT";
         $post_data['tran_id'] = uniqid(); // tran_id must be unique
 
@@ -95,6 +106,7 @@ class SslCommerzPaymentController extends Controller
             print_r($payment_options);
             $payment_options = array();
         }
+    }
 
     }
 
@@ -104,22 +116,23 @@ class SslCommerzPaymentController extends Controller
         # Here you have to receive all the order data to initate the payment.
         # Lets your oder trnsaction informations are saving in a table called "orders"
         # In orders table order uniq identity is "transaction_id","status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
-
+        $requestData=(array)json_decode($request->cart_json);
+        
         $post_data = array();
-        $post_data['total_amount'] = '10'; # You cant not pay less than 10
+        $post_data['total_amount'] = $requestData['amount']; # You cant not pay less than 10
         $post_data['currency'] = "BDT";
         $post_data['tran_id'] = uniqid(); // tran_id must be unique
 
         # CUSTOMER INFORMATION
-        $post_data['cus_name'] = 'Customer Name';
-        $post_data['cus_email'] = 'customer@mail.com';
-        $post_data['cus_add1'] = 'Customer Address';
+        $post_data['cus_name'] = $requestData['cus_name'];
+        $post_data['cus_email'] = $requestData['cus_email'];
+        $post_data['cus_add1'] = $requestData['cus_addr1'];
         $post_data['cus_add2'] = "";
         $post_data['cus_city'] = "";
         $post_data['cus_state'] = "";
         $post_data['cus_postcode'] = "";
         $post_data['cus_country'] = "Bangladesh";
-        $post_data['cus_phone'] = '8801XXXXXXXXX';
+        $post_data['cus_phone'] = $requestData['cus_phone'];
         $post_data['cus_fax'] = "";
 
         # SHIPMENT INFORMATION
@@ -157,6 +170,9 @@ class SslCommerzPaymentController extends Controller
                 'transaction_id' => $post_data['tran_id'],
                 'currency' => $post_data['currency']
             ]);
+        
+            
+
 
         $sslc = new SslCommerzNotification();
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
@@ -166,12 +182,19 @@ class SslCommerzPaymentController extends Controller
             print_r($payment_options);
             $payment_options = array();
         }
+    
 
     }
 
     public function success(Request $request)
-    {
+    {   #cart data delete
+        /* $this->user_id=$request->key;
+        
+        $data=Cart::where('user_id',$this->user_id)->get();
+        Cart::destroy($data); */
+
         echo "Transaction is Successful";
+      
 
         $tran_id = $request->input('tran_id');
         $amount = $request->input('amount');
