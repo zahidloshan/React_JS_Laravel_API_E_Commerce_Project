@@ -149,6 +149,7 @@
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="same-address">
                     <input type="hidden" value={{$item->product->selling_price*$item['product_qty']}} name="amount" id="total_amount" required/>
+                    <input type="hidden" value={{$item->user_id}} name="userid" id="user_id" required/>
                     <label class="custom-control-label" for="same-address">Shipping address is the same as my billing
                         address</label>
                 </div>
@@ -195,6 +196,7 @@
     obj.cus_email = $('#email').val();
     obj.cus_addr1 = $('#address').val();
     obj.amount = $('#total_amount').val();
+    obj.userid = $('#user_id').val();
 
     $("#customer_name").change(function(){
         obj.cus_name = $('#customer_name').val();
@@ -210,6 +212,9 @@
     });
     $("#total_amount").change(function(){
         obj.amount = $('#total_amount').val();
+    });
+    $("#user_id").change(function(){
+        obj.userid = $('#user_id').val();
     });
 
     $('#sslczPayBtn').prop('postdata', obj);
